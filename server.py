@@ -253,17 +253,17 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
     
     # Enable robust randomization for varied results
     import random
-    seed_val = random.randint(1, 10000)
+    seed_val = random.randint(1, 1000000)
     solver.parameters.random_seed = seed_val
-    # We also need to tell the solver to randomize its search, not just set a seed
-    solver.parameters.search_branching = cp_model.FIXED_SEARCH
     
-    # We must provide decision strategy to use FIXED_SEARCH properly, 
-    # but a simpler way in recent or-tools is to just use:
-    # solver.parameters.randomize_search = True  (if supported)
-    # Let's add multiple diversification parameters
-    solver.parameters.num_search_workers = 8 # Use multiple cores to find different paths
-    solver.parameters.interleave_search = True
+    # Add a decision strategy to pick random values for the variables.
+    # This ensures different feasible/optimal solutions each time.
+    all_vars = [x[(e, d, s)] for e in range(num_staff) for d in range(num_days) for s in range(num_shifts)]
+    model.AddDecisionStrategy(all_vars, cp_model.CHOOSE_FIRST, cp_model.SELECT_RANDOM_VALUE)
+    
+    # Single worker with decision strategy gives high variety for small problems.
+    solver.parameters.num_search_workers = 1
+    
     
 
     status = solver.Solve(model)
