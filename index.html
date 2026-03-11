@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【Ver4.0】勤務表作成 MVP</title>
+    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div style="background: red; color: white; text-align: center; padding: 10px; font-weight: bold; position: fixed; top: 0; left: 0; width: 100%; z-index: 10000;"
+        id="dev-check">
+        Ver 4.0 - 最新プログラム反映確認用（この赤いバーが見えていれば最新です）
+    </div>
+    <div class="app-container" style="margin-top: 50px;">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                    <h1>【Ver4.0】勤務表作成 <span class="badge">MVP</span></h1>
+                </div>
+                <p class="subtitle">
+                    <select id="year-select" class="calendar-select"></select> 年
+                    <select id="month-select" class="calendar-select"></select> 月
+                    のシフト管理
+                </p>
+            </div>
+
+            <div class="action-area">
+                <button id="reset-btn" class="btn-secondary">
+                    <span class="btn-icon">↺</span> リセット
+                </button>
+                <button id="generate-btn" class="btn-primary">
+                    <span class="btn-icon">✨</span> シフトを自動生成
+                </button>
+                <button id="save-btn" class="btn-secondary hidden">
+                    <span class="btn-icon">💾</span> 保存 (確定)
+                </button>
+                <button id="export-btn" class="btn-secondary hidden">
+                    <span class="btn-icon">📥</span> Excel出力
+                </button>
+            </div>
+        </header>
+
+        <main class="app-layout">
+            <aside class="staff-sidebar">
+                <div class="sidebar-header">
+                    <h2>スタッフ設定</h2>
+                    <div class="staff-summary">
+                        計 <span id="staff-total-count">0</span> 名 (夜勤可: <span id="staff-night-count">0</span>名)
+                    </div>
+                </div>
+
+                <div class="staff-list-container">
+                    <table class="staff-table">
+                        <thead>
+                            <tr>
+                                <th>名前</th>
+                                <th>階</th>
+                                <th>夜勤</th>
+                                <th>限定シフト</th>
+                                <th>平日のみ</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staff-tbody">
+                            <!-- JS will inject rows here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <button id="add-staff-btn" class="btn-secondary">
+                    <span class="btn-icon">＋</span> スタッフ追加
+                </button>
+                <p class="sidebar-note">※2Fはスタッフ15番以降を推奨します。労働時間は月176h以内に自動調整されます。</p>
+            </aside>
+
+            <section class="schedule-panel">
+                <div id="loading" class="loading-state hidden">
+                    <div class="spinner"></div>
+                    <p>最適なシフトを計算中...</p>
+                    <p class="loading-subtext">36協定（176時間以内）と夜勤明けのルールを順守して探索しています</p>
+                </div>
+
+                <div id="error-message" class="error-message hidden"></div>
+
+                <div id="schedule-container" class="schedule-container hidden">
+                    <table id="schedule-table">
+                        <!-- JS content -->
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js?v=5"></script>
+</body>
+
+</html>

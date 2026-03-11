@@ -1,0 +1,4 @@
+ortools==9.11.4210
+fastapi
+uvicorn
+openpyxl
