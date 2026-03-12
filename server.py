@@ -256,13 +256,10 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
     seed_val = random.randint(1, 1000000)
     solver.parameters.random_seed = seed_val
     
-    # Add a decision strategy to pick random values for the variables.
-    # This ensures different feasible/optimal solutions each time.
-    all_vars = [x[(e, d, s)] for e in range(num_staff) for d in range(num_days) for s in range(num_shifts)]
-    model.AddDecisionStrategy(all_vars, cp_model.CHOOSE_FIRST, cp_model.SELECT_RANDOM_VALUE)
-    
-    # Single worker with decision strategy gives high variety for small problems.
-    solver.parameters.num_search_workers = 1
+    # Use multiple workers and randomize search for variety
+    solver.parameters.num_search_workers = 8
+    solver.parameters.randomize_search = True
+    solver.parameters.interleave_search = True
     
     
 
