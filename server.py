@@ -226,10 +226,9 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
         staff = staff_list[e]
         op = off_point_vars[e]
         
-        # Tightened range: 9 to 11 days (18 to 22 points)
-        # 12 days (24 points) is now disallowed.
-        model.Add(op >= 18) 
-        model.Add(op <= 22)
+        # Relaxed range: 8 to 12 days (16 to 24 points)
+        model.Add(op >= 16) 
+        model.Add(op <= 24)
 
         # Rule: If previous month < 10 days, current month MUST BE >= 10 days (20 points)
         # We skip this for weekday-only staff (leaders/business) as their schedule is fixed
@@ -256,10 +255,11 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
     seed_val = random.randint(1, 1000000)
     solver.parameters.random_seed = seed_val
     
-    # Use multiple workers and randomize search for variety
+    # Use multiple workers and randomize search for variety.
+    # PORTFOLIO_SEARCH often gives better variety than DEFAULT_SEARCH.
     solver.parameters.num_search_workers = 8
     solver.parameters.randomize_search = True
-    solver.parameters.interleave_search = True
+    solver.parameters.search_branching = cp_model.PORTFOLIO_SEARCH
     
     
 
