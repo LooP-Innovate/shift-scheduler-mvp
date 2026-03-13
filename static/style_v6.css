@@ -356,28 +356,13 @@ h1 {
     font-weight: 600;
 }
 
-.staff-input {
-    width: 100%;
-    padding: 0.35rem 0.5rem;
-    border: 1px solid transparent;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 0.85rem;
-    background: transparent;
-    transition: all 0.2s;
-}
-
-.staff-input:hover {
-    border-color: var(--border);
-    background: var(--surface-hover);
-}
-
 .staff-input:focus {
     outline: none;
     border-color: var(--primary);
     background: var(--surface);
     box-shadow: 0 0 0 2px var(--primary-light);
 }
+/* REMOVED DUPLICATE .staff-input blocks below */
 
 .btn-secondary {
     background-color: var(--surface-hover);
@@ -425,7 +410,91 @@ h1 {
 }
 
 .btn-text:hover {
-    background: #fee2e2;
+    background: #f1f5f9;
+}
+
+.delete-btn {
+    color: #ef4444;
+}
+
+/* Sidebar Dimensions - Stabilized */
+.app-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr !important;
+    gap: 1rem;
+    align-items: start;
+}
+
+/* Staff Table Robust Reset */
+.staff-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.staff-table th, .staff-table td {
+    padding: 4px 2px !important;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+    border-bottom: 1px solid var(--border) !important;
+    vertical-align: middle !important;
+    height: 36px !important; /* Fixed height to prevent stretching */
+}
+
+/* Hardcoded Column Widths */
+.staff-table th:nth-child(1), .staff-table td:nth-child(1) { width: 120px !important; text-align: left !important; } /* 名前 */
+.staff-table th:nth-child(2), .staff-table td:nth-child(2) { width: 45px !important; }  /* 階 */
+.staff-table th:nth-child(3), .staff-table td:nth-child(3) { width: 40px !important; }  /* 平日 */
+.staff-table th:nth-child(4), .staff-table td:nth-child(4) { width: 40px !important; }  /* 夜勤 */
+.staff-table th:nth-child(5), .staff-table td:nth-child(5) { width: 60px !important; }  /* 並替 */
+
+.staff-table th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-weight: 700 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 20 !important;
+}
+
+.staff-input {
+    font-size: 0.75rem !important;
+    padding: 2px 4px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    background: white !important;
+    width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    height: 28px !important;
+}
+
+.staff-input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 2px var(--primary-light) !important;
+}
+
+/* Checkbox specific to ensure visibility */
+.staff-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.staff-table th:first-child,
+.staff-table td:first-child {
+    width: 90px;
+}
+
+.selected-row {
+    background-color: var(--primary-light) !important;
+}
+
+.selected-row td {
+    background-color: transparent !important;
 }
 
 .sidebar-note {

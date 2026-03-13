@@ -115,14 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const scheduleContainer = document.getElementById('schedule-container');
     const scheduleTable = document.getElementById('schedule-table');
 
+    const yearSelect = document.getElementById('year-select');
+    const monthSelect = document.getElementById('month-select');
+    const deleteStaffBtn = document.getElementById('delete-staff-btn');
+
     const staffTbody = document.getElementById('staff-tbody');
     const staffTotalCountEl = document.getElementById('staff-total-count');
     const staffNightCountEl = document.getElementById('staff-night-count');
-    const yearSelect = document.getElementById('year-select');
-    const monthSelect = document.getElementById('month-select');
 
     // --- State ---
     let staffList = [];
+    let selectedStaffIndex = -1;
 
     // --- Initialization ---
     const currentYear = new Date().getFullYear();
@@ -162,6 +165,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         staffList.forEach((staff, index) => {
             const tr = document.createElement('tr');
+            if (index === selectedStaffIndex) {
+                tr.classList.add('selected-row');
+            }
+            tr.style.cursor = 'pointer';
+            tr.addEventListener('click', (e) => {
+                // Don't select if clicking inputs
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'BUTTON') return;
+                selectedStaffIndex = index;
+                renderStaffList();
+            });
 
             // Name Input
             const tdName = document.createElement('td');
@@ -169,8 +182,10 @@ document.addEventListener('DOMContentLoaded', () => {
             inputName.type = 'text';
             inputName.value = staff.name;
             inputName.className = 'staff-input';
+            inputName.style.width = '100%'; 
             inputName.addEventListener('change', (e) => {
                 staffList[index].name = e.target.value.trim();
+                syncScheduleTable();
             });
             tdName.appendChild(inputName);
 
@@ -178,55 +193,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const tdFloor = document.createElement('td');
             const selectFloor = document.createElement('select');
             selectFloor.className = 'staff-input';
+            selectFloor.style.width = '100%';
             [1, 2].forEach(f => {
                 const opt = document.createElement('option');
                 opt.value = f;
-                opt.textContent = f + '階';
+                opt.textContent = f + 'F';
                 if (staff.floor === f) opt.selected = true;
                 selectFloor.appendChild(opt);
             });
             selectFloor.addEventListener('change', (e) => {
-                staffList[index].floor = parseInt(e.target.value, 10);
+                const newFloor = parseInt(e.target.value, 10);
+                staffList[index].floor = newFloor;
+                syncScheduleTable();
             });
             tdFloor.appendChild(selectFloor);
-
-            // Night Checkbox
-            const tdNight = document.createElement('td');
-            const inputNight = document.createElement('input');
-            inputNight.type = 'checkbox';
-            inputNight.checked = staff.can_night;
-            inputNight.addEventListener('change', (e) => {
-                staffList[index].can_night = e.target.checked;
-                updateStaffCounts();
-            });
-            tdNight.appendChild(inputNight);
-
-            // Restricted Shift Dropdown
-            const tdRestricted = document.createElement('td');
-            const selectRestricted = document.createElement('select');
-            selectRestricted.className = 'staff-input';
-
-            const SHIFT_OPTIONS = [
-                { value: '', label: 'なし' },
-                { value: '早②', label: '早②' },
-                { value: '早③', label: '早③' },
-                { value: '日', label: '日勤' },
-                { value: '遅①', label: '遅①' },
-                { value: '遅②', label: '遅②' }
-            ];
-
-            SHIFT_OPTIONS.forEach(optData => {
-                const opt = document.createElement('option');
-                opt.value = optData.value;
-                opt.textContent = optData.label;
-                if ((staff.restricted_shift || '') === optData.value) opt.selected = true;
-                selectRestricted.appendChild(opt);
-            });
-
-            selectRestricted.addEventListener('change', (e) => {
-                staffList[index].restricted_shift = e.target.value || null;
-            });
-            tdRestricted.appendChild(selectRestricted);
 
             // Weekday Only Checkbox
             const tdWeekday = document.createElement('td');
@@ -237,28 +217,95 @@ document.addEventListener('DOMContentLoaded', () => {
                 staffList[index].is_weekday_only = e.target.checked;
             });
             tdWeekday.appendChild(inputWeekday);
+            tdWeekday.style.textAlign = 'center';
 
-            // Actions
-            const tdAction = document.createElement('td');
-            const btnDelete = document.createElement('button');
-            btnDelete.className = 'btn-text';
-            btnDelete.innerHTML = '削除';
-            btnDelete.addEventListener('click', () => {
-                staffList.splice(index, 1);
-                renderStaffList();
+            // Night Checkbox
+            const tdNight = document.createElement('td');
+            const inputNight = document.createElement('input');
+            inputNight.type = 'checkbox';
+            inputNight.checked = staff.can_night;
+            inputNight.addEventListener('change', (e) => {
+                staffList[index].can_night = e.target.checked;
             });
-            tdAction.appendChild(btnDelete);
+            tdNight.appendChild(inputNight);
+            tdNight.style.textAlign = 'center';
+
+            // Order Actions
+            const tdOrder = document.createElement('td');
+            tdOrder.style.whiteSpace = 'nowrap';
+            tdOrder.style.textAlign = 'center';
+            
+            // Move Up
+            const btnUp = document.createElement('button');
+            btnUp.className = 'btn-text';
+            btnUp.title = '上に移動';
+            btnUp.innerHTML = '▲';
+            btnUp.disabled = (index === 0);
+            btnUp.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const temp = staffList[index];
+                staffList[index] = staffList[index - 1];
+                staffList[index - 1] = temp;
+                selectedStaffIndex = index - 1;
+                globalStaffList = staffList;
+                renderStaffList();
+                syncScheduleTable();
+            });
+            
+            // Move Down
+            const btnDown = document.createElement('button');
+            btnDown.className = 'btn-text';
+            btnDown.title = '下に移動';
+            btnDown.innerHTML = '▼';
+            btnDown.disabled = (index === staffList.length - 1);
+            btnDown.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const temp = staffList[index];
+                staffList[index] = staffList[index + 1];
+                staffList[index + 1] = temp;
+                selectedStaffIndex = index + 1;
+                globalStaffList = staffList;
+                renderStaffList();
+                syncScheduleTable();
+            });
+
+            tdOrder.appendChild(btnUp);
+            tdOrder.appendChild(btnDown);
 
             tr.appendChild(tdName);
             tr.appendChild(tdFloor);
-            tr.appendChild(tdNight);
-            tr.appendChild(tdRestricted);
             tr.appendChild(tdWeekday);
-            tr.appendChild(tdAction);
+            tr.appendChild(tdNight);
+            tr.appendChild(tdOrder);
+
             staffTbody.appendChild(tr);
         });
 
         updateStaffCounts();
+    }
+
+    function syncScheduleTable() {
+        if (!window.currentScheduleData || !window.renderInternal) return;
+        const year = parseInt(yearSelect.value);
+        const month = parseInt(monthSelect.value);
+        const numDays = new Date(year, month, 0).getDate();
+
+        // Create new schedule data respecting the staffList order
+        const newSchedule = staffList.map(s => {
+            const existing = window.currentScheduleData.find(ex => ex.staff_id === s.name);
+            if (existing) {
+                existing.floor = s.floor; // Sync floor
+                return existing;
+            }
+            return {
+                staff_id: s.name,
+                floor: s.floor,
+                shifts: new Array(numDays).fill('')
+            };
+        });
+
+        window.currentScheduleData = newSchedule;
+        window.renderInternal(newSchedule, numDays);
     }
 
     function updateStaffCounts() {
@@ -270,17 +317,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Add Staff ---
     addStaffBtn.addEventListener('click', () => {
-        staffList.push({
+        const newStaffName = 'Staff ' + (staffList.length + 1);
+        const newStaff = {
             id: 's' + Date.now(),
-            name: 'Staff ' + (staffList.length + 1),
+            name: newStaffName,
             can_night: true,
-            floor: 1,
+            floor: 2, // Default to 2F
             restricted_shift: null,
             is_weekday_only: false
-        });
+        };
+        staffList.push(newStaff);
+        selectedStaffIndex = staffList.length - 1; // Select new one
 
         globalStaffList = staffList;
         renderStaffList();
+        syncScheduleTable();
+        
+        // Scroll to bottom of list
+        const container = document.querySelector('.staff-list-container');
+        if (container) container.scrollTop = container.scrollHeight;
+    });
+
+    // --- Delete Staff ---
+    deleteStaffBtn.addEventListener('click', () => {
+        if (selectedStaffIndex === -1) {
+            alert('削除する行をクリックして選択してください。');
+            return;
+        }
+        const staff = staffList[selectedStaffIndex];
+        if (confirm(`${staff.name} さんを削除してもよろしいですか？`)) {
+            staffList.splice(selectedStaffIndex, 1);
+            selectedStaffIndex = -1;
+            globalStaffList = staffList;
+            renderStaffList();
+            syncScheduleTable();
+        }
     });
 
     // --- Reset Schedule ---
@@ -374,12 +445,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.status === 'success' && data.schedule) {
                 const numDays = new Date(year, month, 0).getDate();
-                window.globalFixedMask = {}; // Initialize mask from saved data
-                data.schedule.forEach(s => {
-                    window.globalFixedMask[s.staff_id] = s.shifts.map(shift => shift !== '');
-                });
+                // Do NOT auto-fix shifts on load. Fixed shifts should only be set manually.
+                window.globalFixedMask = {}; 
 
                 renderScheduleTable(data.schedule, numDays);
+
+                // --- Sync staffList with loaded data ---
+                staffList = data.schedule.map(s => {
+                    const existingGlobal = globalStaffList.find(gs => gs.name === s.staff_id);
+                    return {
+                        id: existingGlobal ? existingGlobal.id : 's' + Date.now() + Math.random(),
+                        name: s.staff_id,
+                        floor: s.floor,
+                        can_night: existingGlobal ? existingGlobal.can_night : true,
+                        restricted_shift: existingGlobal ? existingGlobal.restricted_shift : null,
+                        is_weekday_only: existingGlobal ? existingGlobal.is_weekday_only : false
+                    };
+                });
+                renderStaffList();
+
                 scheduleContainer.classList.remove('hidden');
                 saveBtn.classList.remove('hidden');
                 exportBtn.classList.remove('hidden');
@@ -546,6 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function renderScheduleTable(scheduleData, numDays) {
+        window.currentScheduleData = scheduleData; // Keep track for sync
         console.log('Rendering table...', scheduleData);
         const SHIFTS = ['', '休', '早②', '早③', '日', '遅①', '遅②', '夜①', '夜②', '明け', '病休', '欠勤'];
         const SUMMARY_SHIFTS = ['早②', '早③', '日', '遅①', '遅②', '夜勤合計'];
@@ -586,14 +671,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let filtered = scheduleData.filter(s => s.floor === floorNum);
             if (filtered.length === 0) return;
 
-            // Sort: Weekday Only (Leaders/Business) at the top
-            filtered.sort((a, b) => {
-                const staffA = staffList.find(s => s.name === a.staff_id);
-                const staffB = staffList.find(s => s.name === b.staff_id);
-                if (staffA?.is_weekday_only && !staffB?.is_weekday_only) return -1;
-                if (!staffA?.is_weekday_only && staffB?.is_weekday_only) return 1;
-                return a.staff_id.localeCompare(b.staff_id, undefined, { numeric: true, sensitivity: 'base' });
+            // Preserve order from staffList (Manual Reordering)
+            const orderedFiltered = [];
+            staffList.forEach(s => {
+                const found = filtered.find(f => f.staff_id === s.name);
+                if (found) orderedFiltered.push(found);
             });
+            filtered = orderedFiltered;
 
             const floorHeader = document.createElement('tr');
             const floorCell = document.createElement('td');
@@ -791,6 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.loadSavedInternal = loadSavedSchedule;
 
     initializeStaff();
+    loadSavedSchedule(); // Initial load for current month
     // Intentionally NOT loading saved schedule automatically, so we always start with a blank app.
     // The user has to click "Load Saved Data" to get it.
 });
