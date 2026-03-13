@@ -1,0 +1,817 @@
+:root {
+    /* Color Palette - Premium Modern */
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --primary-light: #e0e7ff;
+
+    --bg-color: #f8fafc;
+    --surface: #ffffff;
+    --surface-hover: #f1f5f9;
+
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+
+    --border: #e2e8f0;
+
+    /* Shift Colors - Updated for V8 */
+    --shift-off: #fff1f2;
+    /* 休 - Light Rose/Pink */
+    --shift-morning2: #f1f5f9;
+    /* 早② - Gray 1 */
+    --shift-morning3: #e2e8f0;
+    /* 早③ - Gray 2 */
+    --shift-day: #cbd5e1;
+    /* 日 - Gray 3 */
+    --shift-late1: #cbd5e1;
+    /* 遅① - Gray 3.5 */
+    --shift-late2: #94a3b8;
+    /* 遅② - Gray 4 */
+    --shift-night1: #a855f7;
+    /* 夜① - Purple 1 */
+    --shift-night2: #7e22ce;
+    /* 夜② - Purple 2 */
+    --shift-night-light: #f3e8ff;
+    /* 明け - Light Purple */
+
+    /* Manual Only Shifts */
+    --shift-sick: #f43f5e;
+    /* 病休 - Bright Pinkish Red */
+    --shift-absent: #475569;
+    /* 欠勤 - Slate Gray (darker) */
+
+    --shift-text-off: #9f1239;
+    --shift-text-morning2: #1e293b;
+    --shift-text-morning3: #1e293b;
+    --shift-text-day: #0f172a;
+    --shift-text-late1: #1e293b;
+    --shift-text-late2: #ffffff;
+    --shift-text-night1: #ffffff;
+    --shift-text-night2: #ffffff;
+    --shift-text-ake: #6b21a8;
+    --shift-text-sick: #ffffff;
+    --shift-text-absent: #ffffff;
+
+    --radius-lg: 16px;
+    --radius-md: 8px;
+    --radius-sm: 4px;
+
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem;
+}
+
+/* --- Header Styles --- */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary), #818cf8);
+    color: white;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge {
+    font-size: 0.75rem;
+    background-color: var(--primary-light);
+    color: var(--primary);
+    padding: 0.2rem 0.5rem;
+    border-radius: 99px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.calendar-select {
+    padding: 2px 4px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* --- Button Styles --- */
+.action-area {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    height: 42px;
+    width: 180px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    box-shadow: var(--shadow-sm);
+    font-family: inherit;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    font-size: 1.1rem;
+}
+
+/* Editable Shift Selector */
+.shift-select {
+    appearance: none;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.05rem;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    min-width: 32px;
+}
+
+.shift-select:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shift-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+/* Select coloring mapped to the same variables */
+.shift-select.val-休 {
+    background-color: var(--shift-off);
+    color: var(--shift-text-off);
+}
+
+.shift-select.val-早② {
+    background-color: var(--shift-morning2);
+    color: var(--shift-text-morning2);
+}
+
+.shift-select.val-早③ {
+    background-color: var(--shift-morning3);
+    color: var(--shift-text-morning3);
+}
+
+.shift-select.val-日 {
+    background-color: var(--shift-day);
+    color: var(--shift-text-day);
+}
+
+.shift-select.val-遅① {
+    background-color: var(--shift-late1);
+    color: var(--shift-text-late1);
+}
+
+.shift-select.val-遅② {
+    background-color: var(--shift-late2);
+    color: var(--shift-text-late2);
+}
+
+.shift-select.val-夜① {
+    background-color: var(--shift-night1);
+    color: var(--shift-text-night1);
+}
+
+.shift-select.val-夜② {
+    background-color: var(--shift-night2);
+    color: var(--shift-text-night2);
+}
+
+.shift-select.val-明け {
+    background-color: var(--shift-night-light);
+    color: var(--shift-text-ake);
+}
+
+.shift-select.val-病休 {
+    background-color: var(--shift-sick);
+    color: var(--shift-text-sick);
+}
+
+.shift-select.val-欠勤 {
+    background-color: var(--shift-absent);
+    color: var(--shift-text-absent);
+}
+
+/* --- Layout --- */
+.app-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1rem;
+    align-items: start;
+}
+
+/* --- Sidebar (Staff Management) --- */
+.staff-sidebar {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: calc(100vh - 12rem);
+    min-height: 500px;
+    position: sticky;
+    top: 1rem;
+}
+
+.sidebar-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.staff-summary {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.staff-list-container {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+
+    /* Scrollbar */
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+}
+
+.staff-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.staff-table th,
+.staff-table td {
+    padding: 0.35rem;
+    font-size: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.staff-table th {
+    background: var(--surface-hover);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.staff-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: var(--surface);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+/* REMOVED DUPLICATE .staff-input blocks below */
+
+.btn-secondary {
+    background-color: var(--surface-hover);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+    height: 42px;
+    width: 180px;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.staff-sidebar .btn-secondary {
+    width: 100%;
+    height: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-shrink: 1;
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-text:hover {
+    background: #f1f5f9;
+}
+
+.delete-btn {
+    color: #ef4444;
+}
+
+/* Sidebar Dimensions - Stabilized */
+.app-layout {
+    display: grid;
+    grid-template-columns: 360px 1fr !important;
+    gap: 1rem;
+    align-items: start;
+}
+
+/* Staff Table Robust Reset */
+.staff-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.staff-table th, .staff-table td {
+    padding: 4px 2px !important;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+    border-bottom: 1px solid var(--border) !important;
+    vertical-align: middle !important;
+    height: 36px !important; /* Fixed height to prevent stretching */
+}
+
+/* Hardcoded Column Widths */
+.staff-table th:nth-child(1), .staff-table td:nth-child(1) { width: 120px !important; text-align: left !important; } /* 名前 */
+.staff-table th:nth-child(2), .staff-table td:nth-child(2) { width: 45px !important; }  /* 階 */
+.staff-table th:nth-child(3), .staff-table td:nth-child(3) { width: 40px !important; }  /* 平日 */
+.staff-table th:nth-child(4), .staff-table td:nth-child(4) { width: 40px !important; }  /* 夜勤 */
+.staff-table th:nth-child(5), .staff-table td:nth-child(5) { width: 60px !important; }  /* 並替 */
+
+.staff-table th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-weight: 700 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 20 !important;
+}
+
+.staff-input {
+    font-size: 0.75rem !important;
+    padding: 2px 4px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 4px !important;
+    background: white !important;
+    width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+    height: 28px !important;
+}
+
+.staff-input:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 2px var(--primary-light) !important;
+}
+
+/* Checkbox specific to ensure visibility */
+.staff-table input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.staff-table th:first-child,
+.staff-table td:first-child {
+    width: 90px;
+}
+
+.selected-row {
+    background-color: var(--primary-light) !important;
+}
+
+.selected-row td {
+    background-color: transparent !important;
+}
+
+.sidebar-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* --- Usage Guide --- */
+.usage-guide {
+    margin-top: auto;
+    background: var(--primary-light);
+    border-radius: var(--radius-md);
+    padding: 0;
+    border: 1px solid var(--primary);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.usage-guide summary {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(79, 70, 229, 0.05);
+}
+
+.usage-guide summary::-webkit-details-marker {
+    display: none;
+}
+
+.usage-guide[open] summary {
+    border-bottom: 1px solid var(--primary);
+}
+
+.usage-content {
+    padding: 1rem;
+}
+
+.usage-step {
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.usage-step strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.usage-step:last-child {
+    margin-bottom: 0;
+}
+
+.step-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-right: 4px;
+}
+
+/* --- Schedule Panel --- */
+.schedule-panel {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    min-height: calc(100vh - 12rem);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Loading State --- */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 400px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.loading-subtext {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--primary-light);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* --- Error Message --- */
+.error-message {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid #fecaca;
+    margin-bottom: 1rem;
+}
+
+/* --- Schedule Table --- */
+.schedule-container {
+    overflow-x: auto;
+
+    /* Soft scrollbar for webkit */
+    &::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1600px;
+}
+
+th,
+td {
+    padding: 0.25rem 0.15rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    font-size: 0.75rem;
+    position: relative;
+    /* For the fixed cell triangle */
+}
+
+td.fixed-cell::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-width: 10px 10px 0 0;
+    border-style: solid;
+    border-color: #ef4444 transparent transparent transparent;
+    /* Red triangle in top left */
+    pointer-events: none;
+    /* So it doesn't block clicks */
+}
+
+th:first-child,
+td:first-child {
+    border-left: 1px solid var(--border);
+}
+
+th {
+    background-color: var(--surface-hover);
+    font-weight: 600;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+}
+
+th.sat {
+    color: #2563eb;
+    /* Blue for Saturday */
+    background-color: #eff6ff;
+}
+
+th.sun {
+    color: #dc2626;
+    /* Red for Sunday */
+    background-color: #fef2f2;
+}
+
+th:first-child {
+    border-top-left-radius: var(--radius-md);
+    position: sticky;
+    left: 0;
+    background-color: var(--surface-hover);
+    z-index: 10;
+}
+
+th:last-child {
+    border-top-right-radius: var(--radius-md);
+}
+
+td:first-child {
+    font-weight: 600;
+    color: var(--text-main);
+    text-align: left;
+    padding-left: 1rem;
+    position: sticky;
+    left: 0;
+    background-color: var(--surface);
+    z-index: 5;
+}
+
+/* Bottom borders for last row */
+tr:last-child td {
+    border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td:first-child {
+    border-bottom-left-radius: var(--radius-md);
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: var(--radius-md);
+}
+
+/* --- Summary Footer --- */
+.summary-row td {
+    background-color: #f1f5f9;
+    border-top: 2px solid var(--border);
+}
+
+.summary-cell {
+    font-weight: 600;
+    color: var(--text-main);
+    background-color: #fff;
+}
+
+.summary-row:first-child td {
+    border-top: 2px solid #94a3b8;
+}
+
+/* --- Utility Classes --- */
+.hidden {
+    display: none !important;
+}
+
+/* --- Animations --- */
+.fade-in {
+    animation: fadeIn 0.4s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- MVP Dashboard Info --- */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.card {
+    background: var(--surface-hover);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+}
+
+.card h3 {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
