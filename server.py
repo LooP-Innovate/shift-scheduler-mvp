@@ -197,6 +197,17 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
             model.Add(sum(x[(e, num_days-2, s)] for s in [6, 7]) == 0).OnlyEnforceIf(is_night_last.Not())
             model.Add(sum(x[(e, num_days-1, s)] for s in [0, 8, 9, 10]) == 1).OnlyEnforceIf(is_night_last)
 
+        # 3.2 Ver 8.27: Ake implies Night (Bidirectional constraint)
+        for d in range(1, num_days):
+            # If d is Ake(8), then d-1 MUST be Night(6, 7)
+            model.Add(sum(x[(e, d-1, s)] for s in [6, 7]) == 1).OnlyEnforceIf(x[(e, d, 8)])
+            
+            # If d-1 is NOT Night(6, 7), then d CANNOT be Ake(8)
+            is_prev_night = model.NewBoolVar(f'e{e}_d{d}_is_prev_night')
+            model.Add(sum(x[(e, d-1, s)] for s in [6, 7]) == 1).OnlyEnforceIf(is_prev_night)
+            model.Add(sum(x[(e, d-1, s)] for s in [6, 7]) == 0).OnlyEnforceIf(is_prev_night.Not())
+            model.Add(x[(e, d, 8)] == 0).OnlyEnforceIf(is_prev_night.Not())
+
         # 3.1 Month Boundary Continuity
         staff = staff_list[e]
         staff_name = staff.name.strip() # Define staff_name here
@@ -210,6 +221,11 @@ def generate_schedule(year: int, month: int, staff_list: List[Staff], prev_shift
                     if num_days >= 2: 
                         # Day 1 must be Off or Sick or Absent
                         model.Add(sum(x[(e, 1, s)] for s in [0, 9, 10]) == 1)
+                else:
+                    # Ver 8.27: If previous was NOT night, Day 0 CANNOT be Ake
+                    if not is_full_absent[e]:
+                        model.Add(x[(e, 0, 8)] == 0)
+
                 if last_shift == "明け":
                     # If prev was Ake, Day 0 must be Off or Sick or Absent
                     model.Add(sum(x[(e, 0, s)] for s in [0, 9, 10]) == 1)

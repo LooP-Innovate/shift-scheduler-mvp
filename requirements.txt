@@ -1,4 +1,6 @@
-ortools==9.11.4210
+ortools==9.15.6755
 fastapi
 uvicorn
 openpyxl
+pandas
+python-multipart
